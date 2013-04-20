@@ -53,6 +53,14 @@ class MiniTest::Spec
   #  assert_valid user_card, 'first user_card'
   #  c1.save # will always pass
   def assert_valid object, message = nil
-    assert object.valid?, [message, "expected to be valid, got #{object.errors.messages}"].compact.join(': ')
+    # Rails 3.0 have error_messages, Rails > 3.0 have errors.messages
+    error_messages = if ENV['RAILS_VERSION'] == '3.0'
+      object.errors.full_messages
+    else
+      object.errors.messages
+    end
+    
+    assert object.valid?, [message, "expected to be valid, got #{error_messages}"].compact.join(': ')
   end
+
 end

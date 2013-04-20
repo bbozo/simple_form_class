@@ -140,7 +140,7 @@ module SimpleFormClass
 
         get_owner(owner).send(
           owners_attribute_setter,
-          if owners_hash.is_a? ActionController::Parameters
+          if defined?(ActionController::Parameters) && owners_hash.is_a?(ActionController::Parameters)
             owners_hash.permit(
               *self.class.permitted_fields_for_owner(owner)
             )
