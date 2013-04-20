@@ -17,5 +17,12 @@ test/tmp
 test/version_tmp
 tmp
 
+# dummy app
+spec/dummy/log/*
+spec/dummy/db/*.sqlite3
+
+# rvmrc
+*.rvmrc
+
 # NetBeans project folder
 nbproject
