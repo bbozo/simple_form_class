@@ -15,21 +15,6 @@ task "ci" => "test"
 desc "Run all tests"
 task "test" => "test:all"
 
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/{functional,unit}/**/*_test.rb'
-end
-
-namespace :test do
-  Rake::TestTask.new(:lint) do |test|
-    test.libs << 'lib' << 'test'
-    test.pattern = 'test/test_active_model_lint.rb'
-  end
-
-  task :all => ['test', 'test:lint']
-end
-
-
 namespace "test" do
   task "all" => ["unit"]
 

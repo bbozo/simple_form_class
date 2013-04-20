@@ -23,3 +23,5 @@ end
 gem "rails", rails
 
 gem 'minitest-colorize', :git => 'git://github.com/bbozo/minitest-colorize.git', :tag => 'v0.0.4.1'
+
+gem 'strong_parameters'
