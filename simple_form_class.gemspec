@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = SimpleFormClass::VERSION
   spec.authors       = ["Borna Novak"]
   spec.email         = ["dosadnizub@gmail.com"]
-  spec.description   = %q{A simple form class gem, a Rails implementation of the form class pattern}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{An implementation of the form class pattern, for controller use}
+  spec.summary       = %q{Rails model validators when used in forms are a clear break of MVC architecture and strong_parameters make things unDRY, this is one take on making things be Better}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,6 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'activemodel', '>= 3.0'
+
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "pry-rails"
 end
