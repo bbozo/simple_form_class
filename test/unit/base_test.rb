@@ -152,39 +152,37 @@ class BaseTest < MiniTest::Spec
       assert_equal 13, @owner.name, "expected params to change state after setter on @owner"
     end
 
-    if defined? ActionController::Parameters
-      context "mass assignment" do
+    context "mass assignment" do
 
-        should "work on all attributes if not params.is_a? ActionController::Parameters" do
-          params = { self_foo: 20, price: 21, self_boo: 22, name: 23 }
-          assert_kind_of Hash, params, "test case setup problem, params is of wrong class"
+      should "work on all attributes if not params.is_a? ActionController::Parameters" do
+        params = { self_foo: 20, price: 21, self_boo: 22, name: 23 }
+        assert_kind_of Hash, params, "test case setup problem, params is of wrong class"
 
-          form = @class.new(params) do |o|
-            o.owner = @owner
-          end
-
-          assert_equal 20, form.self_foo, "expected self_foo to get mass assigned"
-          assert_equal 21, form.price,  "expected message to get mass assigned"
-
-          assert_equal 22, form.self_boo, "expected self_boo to get mass assigned"
-          assert_equal 23, form.name,   "expected params to get mass assigned"
+        form = @class.new(params) do |o|
+          o.owner = @owner
         end
 
-        should "filter attributes without write: true if params.is_a? ActionController::Parameters" do
-          params = ActionController::Parameters.new(self_foo: 30, price: 31, self_boo: 32, name: 33)
-          assert_kind_of ActionController::Parameters, params, "test case setup problem, params is of wrong class"
+        assert_equal 20, form.self_foo, "expected self_foo to get mass assigned"
+        assert_equal 21, form.price,  "expected message to get mass assigned"
 
-          form = @class.new(params) do |o|
-            o.owner = @owner
-          end
-
-          assert_equal 30, form.self_foo, "expected self_foo to get mass assigned"
-          assert_equal 31, form.price,  "expected message to get mass assigned"
-          assert_equal nil, form.self_boo, "expected self_boo to get filtered out"
-          assert_equal nil, form.name,   "expected params to get filtered out"
-        end
-        
+        assert_equal 22, form.self_boo, "expected self_boo to get mass assigned"
+        assert_equal 23, form.name,   "expected params to get mass assigned"
       end
+
+      should "filter attributes without write: true if params.is_a? ActionController::Parameters" do
+        params = ActionController::Parameters.new(self_foo: 30, price: 31, self_boo: 32, name: 33)
+        assert_kind_of ActionController::Parameters, params, "test case setup problem, params is of wrong class"
+
+        form = @class.new(params) do |o|
+          o.owner = @owner
+        end
+
+        assert_equal 30, form.self_foo, "expected self_foo to get mass assigned"
+        assert_equal 31, form.price,  "expected message to get mass assigned"
+        assert_equal nil, form.self_boo, "expected self_boo to get filtered out"
+        assert_equal nil, form.name,   "expected params to get filtered out"
+      end
+
     end
 
   end
