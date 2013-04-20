@@ -1,4 +1,6 @@
-# SimpleFormClass [![Code Climate](https://codeclimate.com/github/bbozo/simple_form_class.png)](https://codeclimate.com/github/bbozo/simple_form_class)
+# SimpleFormClass
+
+[![Build Status](https://travis-ci.org/bbozo/simple_form_class.png?branch=master)](https://travis-ci.org/bbozo/simple_form_class) [![Code Climate](https://codeclimate.com/github/bbozo/simple_form_class.png)](https://codeclimate.com/github/bbozo/simple_form_class)
 
 TODO: Write a gem description
 
