@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = SimpleFormClass::VERSION
   spec.authors       = ["Borna Novak"]
   spec.email         = ["dosadnizub@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
+  spec.description   = %q{A simple form class gem, a Rails implementation of the form class pattern}
   spec.summary       = %q{TODO: Write a gem summary}
   spec.homepage      = ""
   spec.license       = "MIT"
