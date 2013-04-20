@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["dosadnizub@gmail.com"]
   spec.description   = %q{An implementation of the form class pattern, for controller use}
   spec.summary       = %q{Rails model validators when used in forms are a clear break of MVC architecture and strong_parameters make things unDRY, this is one take on making things be Better}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/bbozo/simple_form_class"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
