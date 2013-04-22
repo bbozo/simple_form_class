@@ -5,7 +5,7 @@ require File.expand_path('../../lib/simple_form_class', __FILE__)
 require "minitest/autorun"
 require "minitest/unit"
 require "minitest/rails/shoulda"
-
+require "minitest/colorize"
 
 
 class MiniTest::Spec
