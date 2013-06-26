@@ -10,7 +10,7 @@ module SimpleFormClass
         owner.errors.messages
 
       unless error_messages.empty?
-        record.errors.add(owner_sym, "is invalid due to #{owner.errors.messages}")
+        record.errors.add(owner_sym, "is invalid due to #{error_messages}")
       end
     end
 
