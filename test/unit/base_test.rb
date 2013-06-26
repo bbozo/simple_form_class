@@ -220,7 +220,7 @@ class BaseTest < MiniTest::Spec
       assert_invalid @form, :self_foo
     end
 
-    context "without owner validations" do
+    context "with owner validations" do
 
       setup do
         @form.perform_owner_validation = true
@@ -258,6 +258,11 @@ class BaseTest < MiniTest::Spec
 
       should "validate its owners" do
         assert_invalid @form, :owner
+      end
+
+      should "be valid once owners are valid" do
+        @owner.name = 'Foo'
+        assert_valid @form
       end
 
     end
