@@ -94,7 +94,7 @@ module SimpleFormClass
 
       ActiveRecord::Base.transaction do
         run_callbacks :save do
-            not owners(except_self: true).map{ |owner| owner.save(*args) }.include?(false)
+          not owners(except_self: true).map{ |owner| owner.save(*args) }.include?(false)
         end
       end
     end
