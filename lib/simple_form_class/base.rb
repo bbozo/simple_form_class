@@ -107,32 +107,6 @@ module SimpleFormClass
       end
     end
 
-    
-    private
-
-
-    def owners_must_be_valid
-      self.class.owners.each do |owner_sym|
-        next if owner_sym == :self
-
-        owner = send owner_sym
-        unless owner.valid?
-          errors.add(:base, "#{owner_sym} of class #{owner.class.to_s} is invalid")
-          delegate_owner_error_messages_to_self owner
-        end
-      end
-    end
-
-    def delegate_owner_error_messages_to_self owner
-      owner.errors.messages.each do |attribute, messages|
-        next unless self.class.fields.has_key? attribute
-
-        messages.each do |message|
-          errors.add(attribute, message)
-        end
-      end
-    end
-
     def attributes=(attributes)
       self.class.owners.each do |owner|
         owners_hash = attributes_for_owner owner, attributes
@@ -151,6 +125,31 @@ module SimpleFormClass
       end
     end
 
+    
+    private
+
+
+    def owners_must_be_valid
+      self.class.owners.each do |owner_sym|
+        next if owner_sym == :self
+
+        owner = send owner_sym
+        unless owner.valid?
+          errors.add(:owner, "#{owner_sym} is invalid")
+          delegate_owner_error_messages_to_self owner
+        end
+      end
+    end
+
+    def delegate_owner_error_messages_to_self owner
+      owner.errors.messages.each do |attribute, messages|
+        next unless self.class.fields.has_key? attribute
+
+        messages.each do |message|
+          errors.add(attribute, message)
+        end
+      end
+    end
 
     def attributes_for_owner owner, attributes = attributes
       attributes.slice(*self.class.fields_for_owner(owner))

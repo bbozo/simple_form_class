@@ -189,8 +189,42 @@ class BaseTest < MiniTest::Spec
 
   context :validators do
 
-    # TODO
-    should_eventually :get_tested do; end
+    setup do
+      @class = Class.new(SimpleFormClass::Base) do
+        field :self_foo, :owner => :self,  :write => true
+        field :price,  :owner => :owner, :write => true
+
+        validates :self_foo, presence: true
+      end
+      Object.const_set("Klass#{@class.object_id}", @class)
+
+      @owner = Product.new
+
+      @form = @class.new do |o|
+        o.owner = @owner
+      end
+    end
+
+    should "be set up correctly for tests, @owner" do
+      assert_invalid @owner, :price, "test case setup problem"
+    end
+
+    should "delegate from owner to form" do
+      assert_invalid @form, :price
+    end
+
+    should "be executed for local form validation chain" do
+      assert_invalid @form, :self_foo
+    end
+
+    should "validate its owners" do
+      @form.attributes = {
+        self_foo: 'foo',
+        price: 15
+      }
+
+      assert_invalid @form, :owner
+    end
 
   end
 
