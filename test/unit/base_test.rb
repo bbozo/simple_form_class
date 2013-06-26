@@ -193,10 +193,11 @@ class BaseTest < MiniTest::Spec
       @class = Class.new(SimpleFormClass::Base) do
         field :self_foo, :owner => :self,  :write => true
         field :price,  :owner => :owner, :write => true
-        attr_accessor :skip_owner_validation
+        attr_accessor :perform_owner_validation
 
         validates :self_foo, presence: true
-        validates_owner :owner, unless: :skip_owner_validation
+        validates :price, numericality: true
+        validates_owner :owner, if: :perform_owner_validation
       end
       Object.const_set("Klass#{@class.object_id}", @class)
 
@@ -222,7 +223,7 @@ class BaseTest < MiniTest::Spec
     context "without owner validations" do
 
       setup do
-        @form.skip_owner_validation = true
+        @form.perform_owner_validation = true
       end
 
       should "be set up correctly for tests, @owner" do
@@ -246,10 +247,11 @@ class BaseTest < MiniTest::Spec
           self_foo: 'foo',
           price: 15
         }
+        @form.perform_owner_validation = true
       end
 
       should "be set up correctly" do
-        @form.skip_owner_validation = true
+        @form.perform_owner_validation = false
         
         assert_valid @form, 'without owner validation @form should be valid'
       end
