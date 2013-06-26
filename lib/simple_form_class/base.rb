@@ -35,7 +35,9 @@ module SimpleFormClass
       false
     end
 
-    validate :owners_must_be_valid
+    # keep this before other validators, this will make sure all owners have been
+    # valid?-ated so their errors.messages is present
+    validate :delegate_validators_from_owners
 
     def self.field field_name, options = {}
       add_owner options[:owner]
@@ -50,6 +52,10 @@ module SimpleFormClass
       end
     end
 
+    # will require owner to be valid in order for form to be valid
+    def self.validates_owner owner, options = {}
+      validates_with SimpleFormClass::OwnerValidator, options.merge(owner: owner)
+    end
 
     def self.owners
       @owners ||= []
@@ -129,13 +135,12 @@ module SimpleFormClass
     private
 
 
-    def owners_must_be_valid
+    def delegate_validators_from_owners
       self.class.owners.each do |owner_sym|
         next if owner_sym == :self
 
         owner = send owner_sym
         unless owner.valid?
-          errors.add(:owner, "#{owner_sym} is invalid")
           delegate_owner_error_messages_to_self owner
         end
       end
