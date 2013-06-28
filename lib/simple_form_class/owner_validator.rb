@@ -10,7 +10,11 @@ module SimpleFormClass
         owner.errors.messages
 
       unless error_messages.empty?
-        record.errors.add(owner_sym, "is invalid due to #{error_messages}")
+        unless SimpleFormClass.legacy_owner_validation
+          record.errors.add(owner_sym, "is invalid due to #{error_messages}")
+        else
+          record.errors.add(:base, "#{owner_sym.to_s} is invalid due to #{error_messages}")
+        end
       end
     end
 
