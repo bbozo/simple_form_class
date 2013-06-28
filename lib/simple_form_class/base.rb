@@ -206,6 +206,7 @@ module SimpleFormClass
     def run_validations_with_validation_callback!(*args, &block)
       run_callbacks :validation do
         run_validations_without_validation_callback!(*args, &block)
+        true
       end
       errors.empty?
     end

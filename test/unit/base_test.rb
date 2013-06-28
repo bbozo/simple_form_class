@@ -42,6 +42,28 @@ class BaseTest < MiniTest::Spec
       end
     end
 
+    context :validation do
+
+      should "after_* still work if form is invalid" do
+        @class = Class.new(SimpleFormClass::Base) do
+          field :foo, owner: :self
+          validates :foo, presence: true
+          attr_reader :after_validation_happened
+          after_validation :foo do
+            @after_validation_happened = true
+          end
+        end
+        Object.const_set("Klass#{@class.object_id}", @class)
+        
+        @dummy_instance = @class.new
+        assert_invalid @dummy_instance, :foo, 'test case setup problem'
+
+        assert @dummy_instance.after_validation_happened,
+          'expected after_validation to get triggered'
+      end
+
+    end
+
     should_eventually "get triggered on callback method override" do
       @class = Class.new(SimpleFormClass::Base) do
 
