@@ -1,7 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
-require 'strong_parameters'
+require 'strong_parameters' unless ENV['RAILS_VERSION']=='4.0' || ENV['RAILS_VERSION']=='master'
 require 'simple_form_class'
 
 module Dummy
