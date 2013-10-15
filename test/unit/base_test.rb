@@ -42,6 +42,69 @@ class BaseTest < MiniTest::Spec
       end
     end
 
+    context :validation do
+
+      should "after_* still work if form is invalid" do
+        @class = Class.new(SimpleFormClass::Base) do
+          field :foo, owner: :self
+          validates :foo, presence: true
+          attr_reader :after_validation_happened
+          after_validation :foo do
+            @after_validation_happened = true
+          end
+        end
+        Object.const_set("Klass#{@class.object_id}", @class)
+        
+        @dummy_instance = @class.new
+        assert_invalid @dummy_instance, :foo, 'test case setup problem'
+
+        assert @dummy_instance.after_validation_happened,
+          'expected after_validation to get triggered'
+      end
+
+      context :repetition do
+
+        setup do
+          @class = Class.new(SimpleFormClass::Base) do
+            field :foo, owner: :self
+            attr_reader :before_validation_count
+            attr_reader :validation_count
+            attr_reader :after_validation_count
+
+            before_validation { @before_validation_count = @before_validation_count.to_i + 1 }
+            validate          { @validation_count = @validation_count.to_i + 1               }
+            after_validation  { @after_validation_count = @after_validation_count.to_i + 1   }
+          end
+          Object.const_set("Klass#{@class.object_id}", @class)
+
+          @dummy_instance = @class.new
+        end
+
+        should "get executed exactly once on save" do
+          @dummy_instance.save
+          assert_equal 1, @dummy_instance.before_validation_count, 'before validation count is off'
+          assert_equal 1, @dummy_instance.validation_count,        'validation count is off'
+          assert_equal 1, @dummy_instance.after_validation_count,  'after validation count is off'
+        end
+
+        should "get executed exactly once on valid?" do
+          @dummy_instance.valid?
+          assert_equal 1, @dummy_instance.before_validation_count, 'before validation count is off'
+          assert_equal 1, @dummy_instance.validation_count,        'validation count is off'
+          assert_equal 1, @dummy_instance.after_validation_count,  'after validation count is off'
+        end
+
+        should "get not get executed on save validate: false" do
+          @dummy_instance.save validate: false
+          assert_equal nil, @dummy_instance.before_validation_count, 'before validation count is off'
+          assert_equal nil, @dummy_instance.validation_count,        'validation count is off'
+          assert_equal nil, @dummy_instance.after_validation_count,  'after validation count is off'
+        end
+
+      end
+
+    end
+
     should_eventually "get triggered on callback method override" do
       @class = Class.new(SimpleFormClass::Base) do
 
@@ -203,6 +266,15 @@ class BaseTest < MiniTest::Spec
 
       @owner = Product.new
 
+      class << @owner
+        attr_reader :validation_count
+        validate :inc_valiation_count
+
+        def inc_valiation_count
+          @validation_count = @validation_count.to_i + 1
+        end
+      end
+
       @form = @class.new do |o|
         o.owner = @owner
       end
@@ -218,6 +290,21 @@ class BaseTest < MiniTest::Spec
 
     should "be executed for local form validation chain" do
       assert_invalid @form, :self_foo
+    end
+
+    should "not get executed on owner when save validate: false" do
+      @form.save validate: false
+      assert_equal nil, @owner.validation_count, 'validation count is off'
+    end
+
+    should "get executed once on owner when valid?" do
+      @form.valid?
+      assert_equal 1, @owner.validation_count, 'validation count is off'
+    end
+    
+    should "get executed once on owner when save" do
+      @form.save
+      assert_equal 1, @owner.validation_count, 'validation count is off'
     end
 
     context "with owner validations" do
@@ -236,6 +323,21 @@ class BaseTest < MiniTest::Spec
 
       should "be executed for local form validation chain" do
         assert_invalid @form, :self_foo
+      end
+
+      should "not get executed on owner when save validate: false" do
+        @form.save validate: false
+        assert_equal nil, @owner.validation_count, 'validation count is off'
+      end
+
+      should "get executed once on owner when valid?" do
+        @form.valid?
+        assert_equal 1, @owner.validation_count, 'validation count is off'
+      end
+
+      should "get executed once on owner when save" do
+        @form.save
+        assert_equal 1, @owner.validation_count, 'validation count is off'
       end
 
     end

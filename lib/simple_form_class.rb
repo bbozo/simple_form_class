@@ -9,4 +9,6 @@ module SimpleFormClass
 
   class InvalidOwner < ArgumentError; end
 
+  mattr_accessor :legacy_owner_validation
+
 end

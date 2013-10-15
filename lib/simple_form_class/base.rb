@@ -86,7 +86,8 @@ module SimpleFormClass
     end
 
     def save(*args)
-      validate = options.has_key?(:validate) ? options[:validate] : true
+      local_options = args.last.is_a?(Hash) ? args.last : {}
+      validate = local_options.has_key?(:validate) ? local_options[:validate] : true
 
       if validate
         return false unless valid?
@@ -206,6 +207,7 @@ module SimpleFormClass
     def run_validations_with_validation_callback!(*args, &block)
       run_callbacks :validation do
         run_validations_without_validation_callback!(*args, &block)
+        true
       end
       errors.empty?
     end
