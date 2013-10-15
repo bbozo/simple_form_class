@@ -140,7 +140,7 @@ module SimpleFormClass
         next if owner_sym == :self
 
         owner = send owner_sym
-        unless owner.valid?
+        if owner && !owner.valid?
           delegate_owner_error_messages_to_self owner
         end
       end
