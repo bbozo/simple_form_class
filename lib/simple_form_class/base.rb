@@ -57,9 +57,18 @@ module SimpleFormClass
       validates_with SimpleFormClass::OwnerValidator, options.merge(owner: owner)
     end
 
+    def self.human_attribute_name attribute, *args, &block
+      field = fields[attribute]
+      if field[:localized_by]
+        field[:localized_by].constantize.human_attribute_name attribute, *args, &block
+      else
+        super(attribute, *args, &block)
+      end
+    end
+
     def self.owners
       @owners ||= []
-      @owners = @owners + superclass.owners if superclass.respond_to? :owners
+      @owners = @owners_setup.keys + superclass.owners if superclass.respond_to? :owners
       @owners.uniq
     end
 
@@ -104,14 +113,13 @@ module SimpleFormClass
       save || raise(ActiveRecord::RecordInvalid.new(self))
     end
 
-    def self.add_owner owner
-      @owners ||= []
+    def self.add_owner owner, options = {}
+      @owners_setup ||= {}
+      attr_accessor owner unless @owners_setup.keys.include? owner
+      
+      @owners_setup[owner] ||= {}
+      @owners_setup[owner].merge! options
 
-      unless @owners.include? owner
-        @owners << owner
-
-        attr_accessor owner
-      end
     end
 
     def attributes=(attributes)
