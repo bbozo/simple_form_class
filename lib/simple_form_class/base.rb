@@ -58,7 +58,7 @@ module SimpleFormClass
     end
 
     def self.human_attribute_name attribute, *args, &block
-      field = fields[attribute]
+      field = fields[attribute.to_s.to_sym] || {}
       if field[:localized_by]
         field[:localized_by].constantize.human_attribute_name attribute, *args, &block
       else
