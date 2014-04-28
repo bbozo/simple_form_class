@@ -8,7 +8,7 @@ module SimpleFormClass
     include ActiveModel::Conversion
     include ActiveModel::Validations
     include ActiveModel::Serialization # TODO: remove?
-    include ActiveModel::Naming if Object.const_defined?('ActiveModel::Naming')
+    include ActiveModel::Naming if defined?(ActiveModel::Naming)
 
     define_model_callbacks :save, :initialize, :validation
 
