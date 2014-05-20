@@ -69,6 +69,7 @@ module SimpleFormClass
 
     def self.owners
       @owners ||= []
+      @owners_setup ||= {}
       @owners = @owners_setup.keys + superclass.owners if superclass.respond_to? :owners
       @owners.uniq
     end
